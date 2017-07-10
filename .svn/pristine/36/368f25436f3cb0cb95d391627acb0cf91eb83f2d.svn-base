@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence" version="2.0">
+    
+	<persistence-unit name="sqlite_eclipselink">
+	
+		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+		
+		<mapping-file>be/steformations/pc/timesheets/dao/entities/orm.xml</mapping-file>
+		
+		<properties>
+			<property name="javax.persistence.jdbc.url" value="jdbc:sqlite::resource:data/timesheets.sqlite3"/>
+			<property name="javax.persistence.jdbc.driver" value="org.sqlite.JDBC"/>
+			<property name="javax.persistence.jdbc.user" value=""/>
+			<property name="javax.persistence.jdbc.password" value=""/>
+			<property name="eclipselink.logging.level" value="FINE"/>
+			
+		</properties>
+
+	</persistence-unit>
+	
+</persistence>

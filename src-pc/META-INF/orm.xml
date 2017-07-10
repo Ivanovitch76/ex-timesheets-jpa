@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings xmlns="http://java.sun.com/xml/ns/persistence/orm"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_2_0.xsd"
+	version="2.0">
+	<access>FIELD</access> <!-- utilisation des setters (PROPERTY) des classes des entités -->
+	
+	<named-query name="FindOneProjectByName">
+		<query>select p from ProjectImpl p where lower(p.name) = lower(?1) </query>
+	</named-query>
+	
+	<named-query name="FindAllPrestationsByEmployeeId">
+		<query>select pr from PrestationImpl pr where pr.employee.id = ?1 </query>
+	</named-query>
+	
+	
+	<!--  classe annotée  -->
+	<entity class="be.steformations.pc.timesheets.dao.entities.EmployeeImpl" />
+	
+	<entity class="be.steformations.pc.timesheets.dao.entities.ProjectImpl"> <!--  @Entity -->
+		<table name="project"></table> <!-- @Table -->
+		<attributes> <!-- Mappage des propriétés de la classe -->
+			<id name="id"></id>			
+			<basic name="name" /> <!-- @Basic -->
+			<basic name="description" />
+			<basic name="startDate" ><temporal>DATE</temporal></basic> <!-- si c'était un timestamp, on placerait TIMESTAMP entre les balises "temporal" -->
+			<basic name="endDate" ><temporal>DATE</temporal></basic>
+			<many-to-one name="manager"> <join-column name="manager"/> </many-to-one>
+		</attributes>
+	</entity>
+	
+	<entity class="be.steformations.pc.timesheets.dao.entities.PrestationImpl" >
+		<table name="prestation"></table> <!-- @Table -->
+		<attributes> <!-- Mappage des propriétés de la classe -->	
+			<!-- La ligne suivante est là pour signaler que l'id est de type serial et déterminé par la DB elle-même -->
+			<id name="id"><generated-value strategy="IDENTITY" />  </id>
+	  		<basic name="day" ><temporal>DATE</temporal></basic> 
+	  		<basic name="duration" />  
+	  		<basic name="comment" />  
+	  		<many-to-one name="employee"> <join-column name="employee"/></many-to-one>
+	  		<many-to-one name="project"> <join-column name="project"/></many-to-one>
+		</attributes>
+	</entity>					
+	
+</entity-mappings>

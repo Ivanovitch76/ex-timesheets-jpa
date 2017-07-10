@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings xmlns="http://java.sun.com/xml/ns/persistence/orm"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_2_0.xsd"
+	version="2.0">
+    
+    <access>FIELD</access>
+    
+   	<table-generator name="prestation_id_generator" 
+   	    	table="keys" pk-column-name="tablename" value-column-name="idvalue" pk-column-value="prestation"
+   	    	initial-value="1" allocation-size="1" />
+   	
+   	<named-query name="findAllEmployees">
+   	    <query>select e from Employee e</query>
+   	</named-query>
+   	
+   	<named-query name="findOneEmployeeByFirstnameAndName">
+   		<query>select e from Employee e where lower(e.firstname) = (?1) and lower(e.name) = lower(?2)</query>
+   	</named-query>
+   	
+   	<named-query name="findOneEmployeeByLoginAndPassword">
+   		<query>select e from Employee e where e.login = ?1 and e.password = ?2</query>
+   	</named-query>
+   	
+   	<named-query name="findAllProjects">
+   	    <query>select p from Project p</query>
+   	</named-query>
+   	
+   	<named-query name="findOneProjectByName">
+   		<query>select p from Project p where lower(p.name) = lower(?1)</query>
+   	</named-query>
+   	
+   	<named-query name="findAllPrestationByEmployeeId">
+   		<query>select p from Prestation p where p.employee.id = ?1</query>
+   	</named-query>
+   	
+   	<named-query name="findAllPrestationsByProjectId">
+   	    <query>select p from Prestation p where p.project.id = ?1</query>
+   	</named-query>
+   	
+   	<entity name="Project" class="be.steformations.pc.timesheets.dao.entities.ProjectImpl">
+   	    <table name="project" />
+   	    <attributes>
+   	        <id name="id" />
+   	        <basic name="name"/>
+   	        <basic name="description"/>
+   	        <basic name="startDate"><temporal>DATE</temporal></basic>
+   	        <basic name="endDate"><temporal>DATE</temporal></basic>
+   	        <many-to-one name="manager" target-entity="be.steformations.pc.timesheets.dao.entities.EmployeeImpl" fetch="LAZY">
+   	            <join-column name="manager"/>
+   	        </many-to-one>
+   	    </attributes>
+   	</entity>
+   	
+   	<entity name="Employee" class="be.steformations.pc.timesheets.dao.entities.EmployeeImpl">
+   	    <table name="employee" />
+   	    <attributes>
+   	        <id name="id" />
+   	        <basic name="firstname" />
+   	        <basic name="name" />
+   	        <basic name="login" />
+   	        <basic name="password" />
+   	        <one-to-many name="managedProjects" target-entity="be.steformations.pc.timesheets.dao.entities.ProjectImpl"
+   	            		 mapped-by="manager"/>
+   	        <one-to-many name="prestations" target-entity="be.steformations.pc.timesheets.dao.entities.PrestationImpl"
+   	            		 mapped-by="employee"/>
+   	    </attributes>
+   	</entity>
+    
+   	<entity name="Prestation" class="be.steformations.pc.timesheets.dao.entities.PrestationImpl">
+   	    <table name="prestation" />
+   	    <attributes>
+   	        <id name="id"><generated-value generator="prestation_id_generator"/></id>
+   	        <basic name="day"><temporal>DATE</temporal></basic>
+   	        <basic name="duration"/>
+   	        <basic name="comment"/>
+   	        <many-to-one name="employee" target-entity="be.steformations.pc.timesheets.dao.entities.EmployeeImpl" fetch="LAZY">
+   	            <join-column name="employee"/>
+   	        </many-to-one>
+   	        <many-to-one name="project" target-entity="be.steformations.pc.timesheets.dao.entities.ProjectImpl" fetch="LAZY">
+   	            <join-column name="project"/>
+   	        </many-to-one>
+   	    </attributes>
+   	</entity>
+   	
+</entity-mappings>
